@@ -62,8 +62,12 @@ export default function PlayPage() {
   // Stryker enable all 
 
 
-  const onSuccessBuy = () => {
-    toast(`Cow bought!`);
+  // const onSuccessBuy = () => {
+  //   toast(`Cow bought!`);
+  // }
+
+  const onErrorBuy = () => {
+    toast('Not Enough Funds!')
   }
 
   const objectToAxiosParamsBuy = (newUserCommons) => ({
@@ -79,7 +83,7 @@ export default function PlayPage() {
   // Stryker disable all 
   const mutationbuy = useBackendMutation(
     objectToAxiosParamsBuy,
-    { onSuccess: onSuccessBuy },
+    { onError: onErrorBuy}
     // Stryker disable next-line all : hard to set up test for caching
     [`/api/usercommons/forcurrentuser?commonsId=${commonsId}`]
   );
