@@ -62,9 +62,9 @@ export default function PlayPage() {
   // Stryker enable all 
 
 
-   const onSuccessBuy = () => {
-   //  toast(`Cow bo`);
-   }
+  const onSuccessBuy = () => {
+    // toast(`Cow bought!`);
+  }
 
   const onErrorBuy = () => {
     toast('Not Enough Funds!')
