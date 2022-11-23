@@ -620,17 +620,17 @@ public class UserCommonsControllerTests extends ControllerTestCase {
       .numOfCows(1)
       .build();
   
-      UserCommons correctuserCommons = UserCommons
-      .builder()
-      .id(1L)
-      .userId(1L)
-      .commonsId(1L)
-      .totalWealth(0)
-      .numOfCows(1)
-      .build();
+      // UserCommons correctuserCommons = UserCommons
+      // .builder()
+      // .id(1L)
+      // .userId(1L)
+      // .commonsId(1L)
+      // .totalWealth(0)
+      // .numOfCows(1)
+      // .build();
   
       String requestBody = mapper.writeValueAsString(userCommonsToSend);
-      String expectedReturn = mapper.writeValueAsString(correctuserCommons);
+      String expectedReturn = "Not enough funds";
   
       when(userCommonsRepository.findByCommonsIdAndUserId(eq(1L), eq(1L))).thenReturn(Optional.of(origUserCommons));
       when(commonsRepository.findById(eq(1L))).thenReturn(Optional.of(testCommons));
@@ -641,11 +641,11 @@ public class UserCommonsControllerTests extends ControllerTestCase {
                       .characterEncoding("utf-8")
                       .content(requestBody)
                       .with(csrf()))
-              .andExpect(status().isOk()).andReturn();
+              .andExpect(status().isBadRequest()).andReturn();
   
       // assert
       verify(userCommonsRepository, times(1)).findByCommonsIdAndUserId(eq(1L), eq(1L));
-      verify(userCommonsRepository, times(1)).save(correctuserCommons);
+      //verify(userCommonsRepository, times(1)).save(correctuserCommons);
       String responseString = response.getResponse().getContentAsString();
       assertEquals(expectedReturn, responseString);
   }
