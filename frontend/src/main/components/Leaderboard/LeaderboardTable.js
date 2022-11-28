@@ -2,12 +2,16 @@ import OurTable from "main/components/OurTable";
 import { hasRole } from "main/utils/currentUser";
 
 // should take in a players list from a commons
-export default function LeaderboardTable({ leaderboardUsers , currentUser }) {
+export default function LeaderboardTable({ leaderboardUsers, currentUser }) {
 
     const columns = [
         {
             Header: 'User Id',
-            accessor: 'userId', 
+            accessor: 'userId',
+        },
+        {
+            Header: 'Username',
+            accessor: 'username',
         },
         {
             Header: 'Total Wealth',
@@ -15,7 +19,7 @@ export default function LeaderboardTable({ leaderboardUsers , currentUser }) {
         },
         {
             Header: 'Cows Owned',
-            accessor: 'numOfCows', 
+            accessor: 'numOfCows',
         },
     ];
 

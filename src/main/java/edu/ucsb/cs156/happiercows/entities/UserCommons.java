@@ -7,7 +7,6 @@ import lombok.NonNull;
 import lombok.Builder;
 import lombok.AccessLevel;
 
-
 import javax.persistence.*;
 
 @Data
@@ -18,16 +17,17 @@ import javax.persistence.*;
 public class UserCommons {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;  
+  private long id;
 
-  @Column(name="commons_id")
-  private long commonsId;  
+  @Column(name = "commons_id")
+  private long commonsId;
 
-  @Column(name="user_id")
-  private long userId;  
+  @Column(name = "user_id")
+  private long userId;
+
+  private String username;
 
   private double totalWealth;
 
   private int numOfCows;
 }
-
