@@ -465,6 +465,7 @@ public class CommonsControllerTests extends ControllerTestCase {
 
     UserCommons uc = UserCommons.builder()
         .userId(1L)
+        .username("Fake user")
         .commonsId(2L)
         .totalWealth(0)
         .numOfCows(0)
@@ -473,6 +474,7 @@ public class CommonsControllerTests extends ControllerTestCase {
     UserCommons ucSaved = UserCommons.builder()
         .id(17L)
         .userId(1L)
+        .username("Fake user")
         .commonsId(2L)
         .totalWealth(0)
         .numOfCows(0)
@@ -509,6 +511,7 @@ public class CommonsControllerTests extends ControllerTestCase {
 
     UserCommons uc = UserCommons.builder()
         .userId(1L)
+        .username("Fake user")
         .commonsId(2L)
         .totalWealth(0)
         .numOfCows(1)
@@ -541,6 +544,7 @@ public class CommonsControllerTests extends ControllerTestCase {
   public void user_commons_exists_but_commons_doesnt_test() throws Exception {
     UserCommons uc = UserCommons.builder()
         .userId(1L)
+        .username("Fake user")
         .commonsId(2L)
         .totalWealth(0)
         .numOfCows(1)
@@ -568,6 +572,7 @@ public class CommonsControllerTests extends ControllerTestCase {
   public void join_and_create_userCommons_for_nonexistent_commons() throws Exception {
     UserCommons uc = UserCommons.builder()
         .userId(1L)
+        .username("1L")
         .commonsId(2L)
         .totalWealth(0)
         .numOfCows(1)
@@ -576,6 +581,7 @@ public class CommonsControllerTests extends ControllerTestCase {
     UserCommons ucSaved = UserCommons.builder()
         .id(17L)
         .userId(1L)
+        .username("1L")
         .commonsId(2L)
         .totalWealth(0)
         .numOfCows(1)
@@ -660,6 +666,7 @@ public class CommonsControllerTests extends ControllerTestCase {
     UserCommons uc = UserCommons.builder()
         .id(16L)
         .userId(1L)
+        .username("1L")
         .commonsId(2L)
         .totalWealth(0)
         .numOfCows(1)
@@ -688,6 +695,7 @@ public class CommonsControllerTests extends ControllerTestCase {
     UserCommons uc = UserCommons.builder()
         .id(16L)
         .userId(1L)
+        .username("1L")
         .commonsId(2L)
         .totalWealth(0)
         .numOfCows(1)
