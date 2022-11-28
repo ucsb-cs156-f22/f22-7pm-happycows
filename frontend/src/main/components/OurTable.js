@@ -26,7 +26,7 @@ export default function OurTable({ columns, data, testid = "testid", ...rest }) 
   }, useSortBy)
 
   return (
-    <Table style={tableStyle} {...getTableProps()} striped bordered hover >
+    <Table {...getTableProps()} striped bordered hover >
       <thead>
         {headerGroups.map(headerGroup => (
           <tr {...headerGroup.getHeaderGroupProps()}>
@@ -67,7 +67,7 @@ export default function OurTable({ columns, data, testid = "testid", ...rest }) 
           )
         })}
       </tbody>
-    </Table >
+    </Table>
   )
 }
 
