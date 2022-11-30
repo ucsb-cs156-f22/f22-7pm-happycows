@@ -6,6 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
 
 import java.time.ZonedDateTime;
 
@@ -30,7 +32,8 @@ public class CowDeath {
     @Column(name="commons_id")
     private long commonsId;  
 
-    @Column(name="user_id")
+
+    //s@Column(name="user_id")
     private long userId;  
 
     @CreatedDate
