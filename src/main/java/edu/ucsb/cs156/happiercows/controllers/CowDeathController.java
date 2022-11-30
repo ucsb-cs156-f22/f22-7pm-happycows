@@ -6,7 +6,7 @@ import edu.ucsb.cs156.happiercows.entities.CowDeath;
 
 
 import edu.ucsb.cs156.happiercows.controllers.ApiController;
-import edu.ucsb.cs156.happiercows.repositories.CowDeathRepositories;
+import edu.ucsb.cs156.happiercows.repositories.CowDeathRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
