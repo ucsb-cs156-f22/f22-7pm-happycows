@@ -178,6 +178,7 @@ public class CommonsController extends ApiController {
 
     User u = getCurrentUser().getUser();
     Long userId = u.getId();
+    // String username = u.getFullName();
 
     Commons joinedCommons = commonsRepository.findById(commonsId)
         .orElseThrow(() -> new EntityNotFoundException(Commons.class, commonsId));

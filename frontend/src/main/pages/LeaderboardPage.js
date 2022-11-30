@@ -29,6 +29,33 @@ export default function LeaderboardPage() {
       },
       []
     );
+
+  for (let index = 0; index < userCommons.length; index++) {
+    console.log(userCommons);
+    const userId = userCommons[index].userId;
+    fetch(`/api/admin/users/forspecificusers?id=${userId}`)
+      .then((res) => res.json())
+      .then((user) => {
+        console.log(userCommons);
+        userCommons[index].username = user.fullName;
+      });
+    // let { data: user, error: _error, status: _status } =
+    //   useBackend(
+    //     [`/api/admin/users/forspecificusers?id=${userId}`],
+    //     {
+    //       method: "GET",
+    //       url: "/api/admin/users/forspecificusers",
+    //       params: {
+    //         id: userId
+    //       }
+    //     },
+    //     []
+    //   );
+      
+  }
+
+  console.log(userCommons);
+
   // Stryker enable all 
 
   // Stryker disable all 
