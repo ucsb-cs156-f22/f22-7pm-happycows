@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.format.annotation.DateTimeFormat;
 
 
+
 @Api(description = "Cow Deaths")
 @RequestMapping("")
 @RestController
@@ -45,9 +46,12 @@ public class CowDeathController extends ApiController {
     @Autowired
     CowDeathRepository cowdeathRepository;
 
+    @Autowired
+    ObjectMapper mapper;
+
     @ApiOperation(value = "Creates a new CowDeath entity as Admin")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping("api/cowdeath")
+    @PostMapping("/api/cowdeath")
     public CowDeath postCowDeath(
             @ApiParam("commonsId") @RequestParam long commonsId,
             @ApiParam("userId") @RequestParam long userId,
@@ -69,19 +73,19 @@ public class CowDeathController extends ApiController {
 
     @ApiOperation(value = "Get the number of cow deaths of a common for admin")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("api/cowdeath/bycommons")
+    @GetMapping("/api/cowdeath/bycommons")
     public Iterable<CowDeath> getCowDeathByCommonsId_admin(
-            @ApiParam("commonsId") @RequestParam Long commonsId) {
+            @ApiParam("commonsId") @RequestParam Long commonsId) throws JsonProcessingException {
         Iterable<CowDeath> cowdeath = cowdeathRepository.getCowsKilledByCommonsId(commonsId);
 
         return cowdeath;
     }
 
-    @ApiOperation(value = "Get the number of cow deaths of a user common for admin")
+    @ApiOperation(value = "Get the number of cow deaths of a user common for user")
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/api/cowdeath/byusercommons")
-    public CowDeath getCowDeathByCommonsIdAndUserId(
-            @ApiParam("commonsId") @RequestParam Long commonsId, @ApiParam("userId") @RequestParam Long userId) {
+    public CowDeath getCowDeathByCommonsIdAndUserId (
+            @ApiParam("commonsId") @RequestParam Long commonsId, @ApiParam("userId") @RequestParam Long userId) throws JsonProcessingException {
     CowDeath cowdeath = cowdeathRepository.getCowsKilledByCommonsIdAndUserId(commonsId, userId)
         .orElseThrow(
             () -> new EntityNotFoundException(CowDeath.class, "commonsId", commonsId, "userId", userId));

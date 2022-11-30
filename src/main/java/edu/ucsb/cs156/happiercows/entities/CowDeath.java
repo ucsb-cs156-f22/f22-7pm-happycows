@@ -33,7 +33,7 @@ public class CowDeath {
     private long commonsId;  
 
 
-    //s@Column(name="user_id")
+    @Column(name="user_id")
     private long userId;  
 
     @CreatedDate

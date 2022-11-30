@@ -13,3 +13,4 @@ public interface CowDeathRepository extends CrudRepository <CowDeath, Long>{
 
     Iterable<CowDeath> getCowsKilledByCommonsId(Long commons_id);
 }
+
