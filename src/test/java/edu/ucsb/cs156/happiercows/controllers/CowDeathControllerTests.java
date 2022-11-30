@@ -132,7 +132,6 @@ public void get_all_cowdeaths_using_commons_id() throws Exception {
 @WithMockUser(roles = { "USER" })
 @Test
 public void get_cowdeaths_using_commons_id_and_user_id() throws Exception {
-  //List<CowDeath> expectedCowDeaths = new ArrayList<CowDeath>();
   ZonedDateTime someTime = ZonedDateTime.parse("2022-11-30T21:50:35.246Z[UTC]");
   CowDeath cowDeathSample = CowDeath.builder()
     .id(0)
@@ -144,10 +143,8 @@ public void get_cowdeaths_using_commons_id_and_user_id() throws Exception {
     .build();
 
 
-  //expectedCowDeaths.add(cowDeathSample);
   when(cowdeathRepository.getCowsKilledByCommonsIdAndUserId(1L, 100L)).thenReturn(Optional.of(cowDeathSample));
-  //when(cowdeathRepository.save(cowDeathSample)).thenReturn(cowDeathSample);
-  //expectedCowDeaths.add(cowDeathSample);
+
   
 
   MvcResult response = mockMvc.perform(get("/api/cowdeath/byusercommons?commonsId=1&userId=100").with(csrf()))
