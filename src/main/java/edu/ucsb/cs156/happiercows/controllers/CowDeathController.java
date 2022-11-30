@@ -4,6 +4,8 @@ import edu.ucsb.cs156.happiercows.errors.EntityNotFoundException;
 import edu.ucsb.cs156.happiercows.models.CurrentUser;
 import edu.ucsb.cs156.happiercows.entities.CowDeath;
 
+
+import edu.ucsb.cs156.happiercows.controllers.ApiController;
 import edu.ucsb.cs156.happiercows.repositories.CowDeathRepositories;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,7 +32,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(description = "")
+
+@Api(description = "Cow Deaths")
 @RequestMapping("")
 @RestController
 @Slf4j
@@ -46,9 +49,9 @@ public class CowDeathController extends ApiController {
     public CowDeath postCowDeath(
             @ApiParam("commonsId") @RequestParam long commonsId,
             @ApiParam("userId") @RequestParam long userId,
-            @ApiParam("createdAt") @RequestParam("createdAt") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime createdAt),
+            @ApiParam("createdAt") @RequestParam("createdAt") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime createdAt,
             @ApiParam("cowsKilled") @RequestParam Integer cowsKilled,
-            @ApiParam("avgHealth") @RequestParam long avgHealth
+            @ApiParam("avgHealth") @RequestParam long avgHealth)
             throws JsonProcessingException {
         log.info("commonsId={}, userId={}, createdAt={}, cowsKilled={}, avgHealth={}", commonsId, userId, createdAt,cowsKilled, avgHealth);
 
@@ -57,7 +60,7 @@ public class CowDeathController extends ApiController {
                         .commonsId(commonsId)
                         .userId(userId)
                         .createdAt(createdAt)
-                        .cowsKileed(cowsKilled)
+                        .cowsKilled(cowsKilled)
                         .avgHealth(avgHealth)
                         .build());
     }
@@ -67,7 +70,7 @@ public class CowDeathController extends ApiController {
     @GetMapping("api/cowdeath/bycommons")
     public CowDeath getCowDeathByCommonsId_admin(
             @ApiParam("commonsId") @RequestParam Long commonsId) {
-        CowDeath cowdeath = cowdeathRepository.findByCommonsId(id).orElseThrow(() -> new EntityNotFoundException(CowDeath.class, id));
+        Iterable<CowDeath> cowdeath = cowdeathRepository.findByCommonsId(commonsId).orElseThrow(() -> new EntityNotFoundException(CowDeath.class, commonsId));
         return cowdeath;
     }
 
@@ -76,7 +79,7 @@ public class CowDeathController extends ApiController {
     @GetMapping("/api/cowdeath/byusercommons")
     public CowDeath getCowDeathByCommonsIdAndUserId(
             @ApiParam("commonsId") @RequestParam Long commonsId, @ApiParam("userId") @RequestParam Long userId) {
-        CowDeath cowdeath = cowdeathRepository.findByCommonsId(id).orElseThrow(() -> new EntityNotFoundException(CowDeath.class, id));
+        Integer cowdeath = cowdeathRepository.findByCommonsId(commonsId, userId).orElseThrow(() -> new EntityNotFoundException(CowDeath.class, commonsId, userId));
         return cowdeath;
     }
 }
