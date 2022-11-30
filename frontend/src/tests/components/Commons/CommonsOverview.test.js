@@ -4,12 +4,13 @@ import { MemoryRouter } from "react-router-dom";
 import axios from "axios";
 import AxiosMockAdapter from "axios-mock-adapter";
 
-import CommonsOverview from "main/components/Commons/CommonsOverview"; 
+import CommonsOverview from "main/components/Commons/CommonsOverview";
 import PlayPage from "main/pages/PlayPage";
-import commonsFixtures from "fixtures/commonsFixtures"; 
+import commonsFixtures from "fixtures/commonsFixtures";
 import leaderboardFixtures from "fixtures/leaderboardFixtures";
 import { apiCurrentUserFixtures } from "fixtures/currentUserFixtures";
 import { systemInfoFixtures } from "fixtures/systemInfoFixtures";
+import userCommonsFixtures from "fixtures/userCommonsFixtures";
 
 const mockNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
@@ -33,14 +34,16 @@ describe("CommonsOverview tests", () => {
 
     test("renders without crashing", () => {
         render(
-            <CommonsOverview commons={commonsFixtures.oneCommons[0]} />
+            <QueryClientProvider client={queryClient}>
+                <CommonsOverview commons={commonsFixtures.oneCommons[0]} />
+            </QueryClientProvider>
         );
     });
 
     test("Redirects to the LeaderboardPage for an admin when you click visit", async () => {
         apiCurrentUserFixtures.adminUser.user.commons = commonsFixtures.oneCommons[0];
         axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.adminUser);
-        axiosMock.onGet("/api/commons", {params: {id:1}}).reply(200, commonsFixtures.oneCommons);
+        axiosMock.onGet("/api/commons", { params: { id: 1 } }).reply(200, commonsFixtures.oneCommons);
         axiosMock.onGet("/api/leaderboard/all").reply(200, leaderboardFixtures.threeUserCommonsLB);
         render(
             <QueryClientProvider client={queryClient}>
@@ -61,11 +64,11 @@ describe("CommonsOverview tests", () => {
     test("No LeaderboardPage for an ordinary user when commons has showLeaderboard = false", async () => {
         const ourCommons = {
             ...commonsFixtures.oneCommons,
-            showLeaderboard : false
+            showLeaderboard: false
         };
         apiCurrentUserFixtures.userOnly.user.commons = commonsFixtures.oneCommons[0];
         axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
-        axiosMock.onGet("/api/commons", {params: {id:1}}).reply(200, ourCommons);
+        axiosMock.onGet("/api/commons", { params: { id: 1 } }).reply(200, ourCommons);
         axiosMock.onGet("/api/leaderboard/all").reply(200, leaderboardFixtures.threeUserCommonsLB);
         render(
             <QueryClientProvider client={queryClient}>
@@ -83,11 +86,11 @@ describe("CommonsOverview tests", () => {
     test("Days elapsed is calculated correctly", async () => {
         const ourCommons = {
             ...commonsFixtures.oneCommons,
-            showLeaderboard : false
+            showLeaderboard: false
         };
         apiCurrentUserFixtures.userOnly.user.commons = commonsFixtures.oneCommons[0];
         axiosMock.onGet("/api/currentUser").reply(200, apiCurrentUserFixtures.userOnly);
-        axiosMock.onGet("/api/commons", {params: {id:1}}).reply(200, ourCommons);
+        axiosMock.onGet("/api/commons", { params: { id: 1 } }).reply(200, ourCommons);
         axiosMock.onGet("/api/leaderboard/all").reply(200, leaderboardFixtures.threeUserCommonsLB);
         render(
             <QueryClientProvider client={queryClient}>
@@ -104,4 +107,21 @@ describe("CommonsOverview tests", () => {
 
         expect(await screen.findByText(`Today is day ${days}!`)).toBeInTheDocument();
     });
+
+    test("Total players is calculated correctly", async () => {
+        const { oneUserCommons } = userCommonsFixtures;
+        render(
+            <QueryClientProvider client={queryClient}>
+                <MemoryRouter>
+                    <CommonsOverview commons={commonsFixtures.oneCommons[0]} />
+                </MemoryRouter>
+            </QueryClientProvider>
+        );
+
+        axiosMock.onGet("/api/usercommons/commons/all", { params: { commonsId: 1 } }).reply(200, oneUserCommons);
+
+        const totalPlayers = oneUserCommons.length
+        expect(await screen.findByText(`Total Players: ${totalPlayers}`)).toBeInTheDocument();
+    });
+    
 });
