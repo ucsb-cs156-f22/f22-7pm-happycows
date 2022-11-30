@@ -82,7 +82,8 @@ export default function PlayPage() {
   // Stryker disable all 
   const mutationbuy = useBackendMutation(
     objectToAxiosParamsBuy,
-    { onSuccess: onSuccessBuy },
+    { onSuccess: onSuccessBuy},
+    { onError: onErrorBuy}
     // Stryker disable next-line all : hard to set up test for caching
     [`/api/usercommons/forcurrentuser?commonsId=${commonsId}`]
   );

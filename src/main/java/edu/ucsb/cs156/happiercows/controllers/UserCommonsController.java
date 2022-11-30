@@ -87,6 +87,9 @@ public class UserCommonsController extends ApiController {
         if(userCommons.getTotalWealth() >= commons.getCowPrice() ){
           userCommons.setTotalWealth(userCommons.getTotalWealth() - commons.getCowPrice());
           userCommons.setNumOfCows(userCommons.getNumOfCows() + 1);
+        } else {
+          userCommonsRepository.save(userCommons);
+          return ResponseEntity.badRequest().body("Not enough funds");
         }
         userCommonsRepository.save(userCommons);
 
