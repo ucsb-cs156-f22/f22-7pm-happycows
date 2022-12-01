@@ -123,5 +123,5 @@ describe("CommonsOverview tests", () => {
         const totalPlayers = oneUserCommons.length
         expect(await screen.findByText(`Total Players: ${totalPlayers}`)).toBeInTheDocument();
     });
-    
+
 });
