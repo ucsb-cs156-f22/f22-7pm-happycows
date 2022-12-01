@@ -6,8 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
-import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
+
 
 import java.time.ZonedDateTime;
 
@@ -40,4 +40,6 @@ public class CowDeath {
     private ZonedDateTime createdAt;
     private Integer cowsKilled;
     private long avgHealth;
+
 }
+
