@@ -69,8 +69,7 @@ public class CowDeathControllerTests extends ControllerTestCase {
   @Autowired
   private ObjectMapper objectMapper;
 
-  private LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
-  private LocalDateTime someOtherTime = LocalDateTime.parse("2022-04-20T15:50:10");
+\\
 
   @WithMockUser(roles = { "USER" })
   @Test
@@ -119,6 +118,15 @@ public class CowDeathControllerTests extends ControllerTestCase {
         .showLeaderboard(false)
         .build();
         
+      Commons common1 = Commons
+      .builder()
+      .name("test commons")
+      .cowPrice(10)
+      .milkPrice(2)
+      .startingBalance(300)
+      .startingDate(LocalDateTime.now())
+      .build();
+
         CowDeath cowDeathSample = CowDeath.builder()
             .id(0)
             .commonsId(2)
