@@ -3,6 +3,14 @@ package edu.ucsb.cs156.happiercows.controllers;
 import edu.ucsb.cs156.happiercows.ControllerTestCase;
 import edu.ucsb.cs156.happiercows.ControllerTestCase;
 import edu.ucsb.cs156.happiercows.repositories.CowDeathRepository;
+import edu.ucsb.cs156.happiercows.entities.CommonsPlus;
+import edu.ucsb.cs156.happiercows.entities.Commons;
+import edu.ucsb.cs156.happiercows.entities.UserCommons;
+import edu.ucsb.cs156.happiercows.models.CreateCommonsParams;
+import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
+import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
+import edu.ucsb.cs156.happiercows.repositories.UserRepository;
+import edu.ucsb.cs156.happiercows.entities.User;
 import edu.ucsb.cs156.happiercows.entities.CowDeath;
 import edu.ucsb.cs156.happiercows.errors.EntityNotFoundException;
 
@@ -35,6 +43,7 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,6 +56,15 @@ public class CowDeathControllerTests extends ControllerTestCase {
 
   @MockBean
   CowDeathRepository cowdeathRepository;
+ 
+  @MockBean
+  UserRepository userRepository;
+
+  @MockBean
+  CommonsRepository commonsRepository;
+
+  @MockBean
+  UserCommonsRepository userCommonsRepository;
 
   @Autowired
   private ObjectMapper objectMapper;
@@ -55,31 +73,55 @@ public class CowDeathControllerTests extends ControllerTestCase {
   @WithMockUser(roles = { "USER" })
   @Test
   public void logged_in_users_cannot_post() throws Exception {
-    mockMvc.perform(post("/api/cowdeath?avgHealth=11&commonsId=1&cowsKilled=9&createdAt=2022-11-30T05:35:00.769Z&userId=5"))
+    mockMvc.perform(post("/api/cowdeath?avgHealth=11&commonsId=1&cowsKilled=9&userId=5"))
             .andExpect(status().is(403)); // normal users can't access at all
   }
 
   @WithMockUser(roles = { "ADMIN" })
   @Test
   public void post_cowdeath_admin_post() throws Exception {
-    ZonedDateTime someTime = ZonedDateTime.parse("2022-11-30T05:35:10Z");
+    //ZonedDateTime someTime = ZonedDateTime.parse("2022-11-30T05:35:10Z");
+      User u1 = User.builder().id(1L).build();
+      UserCommons origUserCommons = UserCommons
+      .builder()
+      .id(1L)
+      .userId(1L)
+      .commonsId(1L)
+      .totalWealth(300)
+      .numOfCows(0)
+      .build();
+  
+      Commons testCommons = Commons
+      .builder()
+      .name("test commons")
+      .cowPrice(10)
+      .milkPrice(2)
+      .startingBalance(300)
+      .startingDate(LocalDateTime.now())
+      .build();
+
+
+    when(userCommonsRepository.save(origUserCommons)).thenReturn(origUserCommons);
+    when(commonsRepository.save(testCommons)).thenReturn(testCommons);
     
-    
-    CowDeath cowdeathsample = CowDeath.builder()
+    CowDeath cowdeathsample = CowDeath
+    .builder()
     .avgHealth(11)
     .commonsId(1)
     .cowsKilled(9)
-    .createdAt(someTime)
-    .userId(5)
+    .userId(1)
     .build();
 
     when(cowdeathRepository.save(cowdeathsample)).thenReturn(cowdeathsample);
 
-    MvcResult response = mockMvc.perform(post("/api/cowdeath?commonsId=1&userId=5&createdAt=2022-11-30T05:35:10Z&cowsKilled=9&avgHealth=11")
+    MvcResult response = mockMvc.perform(post("/api/cowdeath?commonsId=1&userId=5&cowsKilled=9&avgHealth=11")
       .with(csrf()))
             .andExpect(status().isOk()).andReturn();
 
+    verify(userCommonsRepository, times(1)).save(origUserCommons);
+    verify(commonsRepository, times(1)).save(testCommons);
     verify(cowdeathRepository, times(1)).save(cowdeathsample);
+
 
     String expectedJson = mapper.writeValueAsString(cowdeathsample);
     String responseString = response.getResponse().getContentAsString();
@@ -93,14 +135,11 @@ public void get_all_cowdeaths_using_commons_id() throws Exception {
   List<CowDeath> expectedCowDeaths = new ArrayList<CowDeath>();
     
 
-  ZonedDateTime someTime = ZonedDateTime.parse("2022-11-30T05:35:10Z[UTC]");
-  ZonedDateTime someOtherTime = ZonedDateTime.parse("2022-11-30T05:39:10Z[UTC]");
   CowDeath cowdeathsample = CowDeath.builder()
     .id(0)
     .avgHealth(11)
     .commonsId(1)
     .cowsKilled(9)
-    .createdAt(someTime)
     .userId(5)
     .build();
   CowDeath cowdeathsample2 = CowDeath.builder()
@@ -108,7 +147,6 @@ public void get_all_cowdeaths_using_commons_id() throws Exception {
     .avgHealth(12)
     .commonsId(1)
     .cowsKilled(5)
-    .createdAt(someOtherTime)
     .userId(14)
     .build();
 
@@ -132,13 +170,12 @@ public void get_all_cowdeaths_using_commons_id() throws Exception {
 @WithMockUser(roles = { "USER" })
 @Test
 public void get_cowdeaths_using_commons_id_and_user_id() throws Exception {
-  ZonedDateTime someTime = ZonedDateTime.parse("2022-11-30T21:50:35.246Z[UTC]");
+//  ZonedDateTime someTime = ZonedDateTime.parse("2022-11-30T21:50:35.246Z[UTC]");
   CowDeath cowDeathSample = CowDeath.builder()
     .id(0)
     .avgHealth(11)
     .commonsId(1)
     .cowsKilled(9)
-    .createdAt(someTime)
     .userId(100)
     .build();
 

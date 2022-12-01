@@ -7,6 +7,14 @@ import edu.ucsb.cs156.happiercows.entities.CowDeath;
 
 import edu.ucsb.cs156.happiercows.controllers.ApiController;
 import edu.ucsb.cs156.happiercows.repositories.CowDeathRepository;
+import edu.ucsb.cs156.happiercows.repositories.CommonsRepository;
+import edu.ucsb.cs156.happiercows.repositories.UserCommonsRepository;
+import edu.ucsb.cs156.happiercows.repositories.UserRepository;
+
+import edu.ucsb.cs156.happiercows.entities.Commons;
+import edu.ucsb.cs156.happiercows.entities.CommonsPlus;
+import edu.ucsb.cs156.happiercows.entities.User;
+import edu.ucsb.cs156.happiercows.entities.UserCommons;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -32,7 +40,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.format.annotation.DateTimeFormat;
-
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 
 @Api(description = "Cow Deaths")
@@ -46,7 +55,15 @@ public class CowDeathController extends ApiController {
     CowDeathRepository cowdeathRepository;
 
     @Autowired
+    CommonsRepository commonsRepository;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
     ObjectMapper mapper;
+
+
 
     @ApiOperation(value = "Creates a new CowDeath entity as Admin")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -54,17 +71,25 @@ public class CowDeathController extends ApiController {
     public CowDeath postCowDeath(
             @ApiParam("commonsId") @RequestParam long commonsId,
             @ApiParam("userId") @RequestParam long userId,
-            @ApiParam("createdAt") @RequestParam("createdAt") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime createdAt,
             @ApiParam("cowsKilled") @RequestParam Integer cowsKilled,
             @ApiParam("avgHealth") @RequestParam long avgHealth)
             throws JsonProcessingException {
-        log.info("commonsId={}, userId={}, createdAt={}, cowsKilled={}, avgHealth={}", commonsId, userId, createdAt,cowsKilled, avgHealth);
+            commonsRepository.findById(commonsId)
+                .orElseThrow(() -> new EntityNotFoundException(Commons.class, commonsId));
+            userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException(User.class, userId));
 
+
+        // Ensure that only one can be created.
+        if (cowdeathRepository.getCowsKilledByCommonsIdAndUserId(commonsId, userId).isPresent()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CowDeath with inputed commonsId and userId already exists");
+        }
+
+        log.info("commonsId={}, userId={}, cowsKilled={}, avgHealth={}", commonsId, userId, cowsKilled, avgHealth);
         return cowdeathRepository.save(
                 CowDeath.builder()
                         .commonsId(commonsId)
                         .userId(userId)
-                        .createdAt(createdAt)
                         .cowsKilled(cowsKilled)
                         .avgHealth(avgHealth)
                         .build());
