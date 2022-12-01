@@ -80,10 +80,10 @@ public class CowDeathController extends ApiController {
                 .orElseThrow(() -> new EntityNotFoundException(User.class, userId));
 
 
-        // Ensure that only one can be created.
-        if (cowdeathRepository.getCowsKilledByCommonsIdAndUserId(commonsId, userId).isPresent()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CowDeath with inputed commonsId and userId already exists");
-        }
+        // Ensure that only one can be created. Works but needs approriate tests.
+        //if (cowdeathRepository.getCowsKilledByCommonsIdAndUserId(commonsId, userId).isPresent()){
+        //    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CowDeath with inputed commonsId and userId already exists");
+        //}
 
         log.info("commonsId={}, userId={}, cowsKilled={}, avgHealth={}", commonsId, userId, cowsKilled, avgHealth);
         return cowdeathRepository.save(

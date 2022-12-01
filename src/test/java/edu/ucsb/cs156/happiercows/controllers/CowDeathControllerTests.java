@@ -69,13 +69,73 @@ public class CowDeathControllerTests extends ControllerTestCase {
   @Autowired
   private ObjectMapper objectMapper;
 
-  
+  private LocalDateTime someTime = LocalDateTime.parse("2022-03-05T15:50:10");
+  private LocalDateTime someOtherTime = LocalDateTime.parse("2022-04-20T15:50:10");
+
   @WithMockUser(roles = { "USER" })
   @Test
   public void logged_in_users_cannot_post() throws Exception {
     mockMvc.perform(post("/api/cowdeath?avgHealth=11&commonsId=1&cowsKilled=9&userId=5"))
             .andExpect(status().is(403)); // normal users can't access at all
   }
+
+
+@WithMockUser(roles = { "ADMIN" })
+  @Test
+  public void post_cowdeath_to_commmon_that_does_not_exists_admin_post() throws Exception {
+
+        UserCommons expectedUserCommons = UserCommons.builder().id(1).commonsId(2).userId(17).build();
+        CowDeath cowDeathSample = CowDeath.builder()
+            .id(0)
+            .commonsId(2)
+            .userId(1)
+            .createdAt(null)
+            .cowsKilled(2)
+            .avgHealth(4)
+            .build();
+
+        when(cowdeathRepository.save(cowDeathSample)).thenReturn(cowDeathSample);
+        when(userCommonsRepository.findById(1L)).thenReturn(Optional.of(expectedUserCommons));
+
+        mockMvc.perform(post("/api/cowdeath?commonsId=2&userId=17&cowsKilled=2&avgHealth=4")
+            .with(csrf())).andExpect(status().isNotFound());
+
+  }
+
+  @WithMockUser(roles = { "ADMIN" })
+  @Test
+  public void post_cowdeath_to_userId_that_does_not_exists_admin_post() throws Exception {
+
+
+        UserCommons expectedUserCommons = UserCommons.builder().id(1).commonsId(2).userId(1).build();
+        Commons common1 = Commons.builder()
+        .name("Jackson's Commons")
+        .cowPrice(500.99)
+        .milkPrice(8.99)
+        .startingBalance(1020.10)
+        .startingDate(someTime)
+        .endingDate(someOtherTime)
+        .degradationRate(50.0)
+        .showLeaderboard(false)
+        .build();
+        
+        CowDeath cowDeathSample = CowDeath.builder()
+            .id(0)
+            .commonsId(2)
+            .userId(1)
+            .createdAt(null)
+            .cowsKilled(2)
+            .avgHealth(4)
+            .build();
+
+        when(cowdeathRepository.save(cowDeathSample)).thenReturn(cowDeathSample);
+        when(userCommonsRepository.findById(1L)).thenReturn(Optional.of(expectedUserCommons));
+        when(commonsRepository.findById(2L)).thenReturn(Optional.of(common1));
+
+        mockMvc.perform(post("/api/cowdeath?commonsId=2&userId=17&cowsKilled=2&avgHealth=4")
+            .with(csrf())).andExpect(status().isNotFound());
+  }
+
 
   @WithMockUser(roles = { "ADMIN" })
   @Test
