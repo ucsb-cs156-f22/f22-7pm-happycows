@@ -69,7 +69,7 @@ public class CowDeathControllerTests extends ControllerTestCase {
   @Autowired
   private ObjectMapper objectMapper;
 
-\\
+
 
   @WithMockUser(roles = { "USER" })
   @Test
@@ -107,25 +107,15 @@ public class CowDeathControllerTests extends ControllerTestCase {
 
 
         UserCommons expectedUserCommons = UserCommons.builder().id(1).commonsId(2).userId(1).build();
-        Commons common1 = Commons.builder()
-        .name("Jackson's Commons")
-        .cowPrice(500.99)
-        .milkPrice(8.99)
-        .startingBalance(1020.10)
-        .startingDate(someTime)
-        .endingDate(someOtherTime)
-        .degradationRate(50.0)
-        .showLeaderboard(false)
-        .build();
         
-      Commons common1 = Commons
-      .builder()
-      .name("test commons")
-      .cowPrice(10)
-      .milkPrice(2)
-      .startingBalance(300)
-      .startingDate(LocalDateTime.now())
-      .build();
+        Commons common1 = Commons
+        .builder()
+        .name("test commons")
+        .cowPrice(10)
+        .milkPrice(2)
+        .startingBalance(300)
+        .startingDate(LocalDateTime.now())
+        .build();
 
         CowDeath cowDeathSample = CowDeath.builder()
             .id(0)
