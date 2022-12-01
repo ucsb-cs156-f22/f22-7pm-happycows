@@ -169,7 +169,6 @@ public void get_all_cowdeaths_using_commons_id() throws Exception {
 @WithMockUser(roles = { "USER" })
 @Test
 public void get_cowdeaths_using_commons_id_and_user_id() throws Exception {
-//  ZonedDateTime someTime = ZonedDateTime.parse("2022-11-30T21:50:35.246Z[UTC]");
   CowDeath cowDeathSample = CowDeath.builder()
     .id(0)
     .avgHealth(11)
