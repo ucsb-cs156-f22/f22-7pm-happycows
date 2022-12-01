@@ -37,8 +37,8 @@ export default function CommonsOverview({ commons, currentUser }) {
                 <Row>
                     <Col>
                         <Card.Title>Today is day {days}!</Card.Title>
-                        {/* // Stryker disable next-line all */}
-                        <Card.Text>Total Players: {players ? players.length : "Loading... "}</Card.Text>
+                        {// Stryker disable next-line all : Changing Loading string to "" doesn't introduce a bug as it's there to prevent calling .length on undefined object
+                        <Card.Text>Total Players: {players ? players.length : "Loading... "}</Card.Text>}
                     </Col>
                     <Col>
                         {showLeaderboard &&
