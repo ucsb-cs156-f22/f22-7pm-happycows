@@ -101,25 +101,24 @@ public class CowDeathControllerTests extends ControllerTestCase {
       .build();
 
 
-    when(userCommonsRepository.save(origUserCommons)).thenReturn(origUserCommons);
-    when(commonsRepository.save(testCommons)).thenReturn(testCommons);
-    
-    CowDeath cowdeathsample = CowDeath
-    .builder()
-    .avgHealth(11)
-    .commonsId(1)
-    .cowsKilled(9)
-    .userId(1)
-    .build();
+      CowDeath cowdeathsample = CowDeath
+      .builder()
+      .avgHealth(11)
+      .commonsId(1)
+      .createdAt(null)
+      .cowsKilled(9)
+      .userId(1)
+      .build();
 
-    when(cowdeathRepository.save(cowdeathsample)).thenReturn(cowdeathsample);
+      when(cowdeathRepository.save(cowdeathsample)).thenReturn(cowdeathsample);
+      when(userCommonsRepository.findById(1L)).thenReturn(Optional.of(origUserCommons));
+      when(commonsRepository.findById(1L)).thenReturn(Optional.of(testCommons));
+      when(userRepository.findById(1L)).thenReturn(Optional.of(u1));
+  
 
-    MvcResult response = mockMvc.perform(post("/api/cowdeath?commonsId=1&userId=5&cowsKilled=9&avgHealth=11")
+    MvcResult response = mockMvc.perform(post("/api/cowdeath?commonsId=1&userId=1&cowsKilled=9&avgHealth=11")
       .with(csrf()))
             .andExpect(status().isOk()).andReturn();
-
-    verify(userCommonsRepository, times(1)).save(origUserCommons);
-    verify(commonsRepository, times(1)).save(testCommons);
     verify(cowdeathRepository, times(1)).save(cowdeathsample);
 
 
