@@ -50,7 +50,6 @@ import org.springframework.http.HttpStatus;
 @Slf4j
 public class CowDeathController extends ApiController {
 
-
     @Autowired
     CowDeathRepository cowdeathRepository;
 
@@ -64,26 +63,19 @@ public class CowDeathController extends ApiController {
     ObjectMapper mapper;
 
 
-
     @ApiOperation(value = "Creates a new CowDeath entity as Admin")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/api/cowdeath")
     public CowDeath postCowDeath(
-            @ApiParam("commonsId") @RequestParam long commonsId,
-            @ApiParam("userId") @RequestParam long userId,
-            @ApiParam("cowsKilled") @RequestParam Integer cowsKilled,
-            @ApiParam("avgHealth") @RequestParam long avgHealth)
-            throws JsonProcessingException {
-            commonsRepository.findById(commonsId)
-                .orElseThrow(() -> new EntityNotFoundException(Commons.class, commonsId));
-            userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException(User.class, userId));
-
-
-        // Ensure that only one can be created. Works but needs approriate tests.
-        //if (cowdeathRepository.getCowsKilledByCommonsIdAndUserId(commonsId, userId).isPresent()){
-        //    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CowDeath with inputed commonsId and userId already exists");
-        //}
+        @ApiParam("commonsId") @RequestParam long commonsId,
+        @ApiParam("userId") @RequestParam long userId,
+        @ApiParam("cowsKilled") @RequestParam Integer cowsKilled,
+        @ApiParam("avgHealth") @RequestParam long avgHealth)
+        throws JsonProcessingException {
+        commonsRepository.findById(commonsId)
+            .orElseThrow(() -> new EntityNotFoundException(Commons.class, commonsId));
+        userRepository.findById(userId)
+            .orElseThrow(() -> new EntityNotFoundException(User.class, userId));
 
         log.info("commonsId={}, userId={}, cowsKilled={}, avgHealth={}", commonsId, userId, cowsKilled, avgHealth);
         return cowdeathRepository.save(
@@ -99,9 +91,8 @@ public class CowDeathController extends ApiController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/api/cowdeath/bycommons")
     public Iterable<CowDeath> getCowDeathByCommonsId_admin(
-            @ApiParam("commonsId") @RequestParam Long commonsId) throws JsonProcessingException {
+        @ApiParam("commonsId") @RequestParam Long commonsId) throws JsonProcessingException {
         Iterable<CowDeath> cowdeath = cowdeathRepository.getCowsKilledByCommonsId(commonsId);
-
         return cowdeath;
     }
 
@@ -109,10 +100,9 @@ public class CowDeathController extends ApiController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/api/cowdeath/byusercommons")
     public CowDeath getCowDeathByCommonsIdAndUserId (
-            @ApiParam("commonsId") @RequestParam Long commonsId, @ApiParam("userId") @RequestParam Long userId) throws JsonProcessingException {
-    CowDeath cowdeath = cowdeathRepository.getCowsKilledByCommonsIdAndUserId(commonsId, userId)
-        .orElseThrow(
-            () -> new EntityNotFoundException(CowDeath.class, "commonsId", commonsId, "userId", userId));
-    return cowdeath;
+        @ApiParam("commonsId") @RequestParam Long commonsId, @ApiParam("userId") @RequestParam Long userId) throws JsonProcessingException {
+        CowDeath cowdeath = cowdeathRepository.getCowsKilledByCommonsIdAndUserId(commonsId, userId)
+        .orElseThrow(() -> new EntityNotFoundException(CowDeath.class, "commonsId", commonsId, "userId", userId));
+        return cowdeath;
     }
 }
