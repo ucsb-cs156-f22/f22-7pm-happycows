@@ -79,150 +79,148 @@ public class CowDeathControllerTests extends ControllerTestCase {
   }
 
 
-@WithMockUser(roles = { "ADMIN" })
+  @WithMockUser(roles = { "ADMIN" })
   @Test
   public void post_cowdeath_to_commmon_that_does_not_exists_admin_post() throws Exception {
-      UserCommons expectedUserCommons = UserCommons.builder().id(1).commonsId(2).userId(17).build();
-      CowDeath cowDeathSample = CowDeath.builder()
-          .id(0)
-          .commonsId(2)
-          .userId(1)
-          .createdAt(null)
-          .cowsKilled(2)
-          .avgHealth(4)
-          .build();
+    UserCommons expectedUserCommons = UserCommons.builder().id(1).commonsId(2).userId(17).build();
+    CowDeath cowDeathSample = CowDeath.builder()
+        .id(0)
+        .commonsId(2)
+        .userId(1)
+        .createdAt(null)
+        .cowsKilled(2)
+        .avgHealth(4)
+        .build();
 
-      when(cowdeathRepository.save(cowDeathSample)).thenReturn(cowDeathSample);
-      when(userCommonsRepository.findById(1L)).thenReturn(Optional.of(expectedUserCommons));
+    when(cowdeathRepository.save(cowDeathSample)).thenReturn(cowDeathSample);
+    when(userCommonsRepository.findById(1L)).thenReturn(Optional.of(expectedUserCommons));
 
-      mockMvc.perform(post("/api/cowdeath?commonsId=2&userId=17&cowsKilled=2&avgHealth=4")
-          .with(csrf())).andExpect(status().isNotFound());
+    mockMvc.perform(post("/api/cowdeath?commonsId=2&userId=17&cowsKilled=2&avgHealth=4")
+           .with(csrf())).andExpect(status().isNotFound());
 
   }
 
   @WithMockUser(roles = { "ADMIN" })
   @Test
   public void post_cowdeath_to_userId_that_does_not_exists_admin_post() throws Exception {
-      UserCommons expectedUserCommons = UserCommons.builder().id(1).commonsId(2).userId(1).build();
-      Commons common1 = Commons
-          .builder()
-          .name("test commons")
-          .cowPrice(10)
-          .milkPrice(2)
-          .startingBalance(300)
-          .startingDate(LocalDateTime.now())
-          .build();
+    UserCommons expectedUserCommons = UserCommons.builder().id(1).commonsId(2).userId(1).build();
+    Commons common1 = Commons
+        .builder()
+        .name("test commons")
+        .cowPrice(10)
+        .milkPrice(2)
+        .startingBalance(300)
+        .startingDate(LocalDateTime.now())
+        .build();
 
-      CowDeath cowDeathSample = CowDeath.builder()
-          .id(0)
-          .commonsId(2)
-          .userId(1)
-          .createdAt(null)
-          .cowsKilled(2)
-          .avgHealth(4)
-          .build();
+    CowDeath cowDeathSample = CowDeath.builder()
+        .id(0)
+        .commonsId(2)
+        .userId(1)
+        .createdAt(null)
+        .cowsKilled(2)
+        .avgHealth(4)
+        .build();
 
-      when(cowdeathRepository.save(cowDeathSample)).thenReturn(cowDeathSample);
-      when(userCommonsRepository.findById(1L)).thenReturn(Optional.of(expectedUserCommons));
-      when(commonsRepository.findById(2L)).thenReturn(Optional.of(common1));
+    when(cowdeathRepository.save(cowDeathSample)).thenReturn(cowDeathSample);
+    when(userCommonsRepository.findById(1L)).thenReturn(Optional.of(expectedUserCommons));
+    when(commonsRepository.findById(2L)).thenReturn(Optional.of(common1));
 
-      mockMvc.perform(post("/api/cowdeath?commonsId=2&userId=17&cowsKilled=2&avgHealth=4")
-          .with(csrf())).andExpect(status().isNotFound());
+    mockMvc.perform(post("/api/cowdeath?commonsId=2&userId=17&cowsKilled=2&avgHealth=4")
+           .with(csrf())).andExpect(status().isNotFound());
   }
 
 
   @WithMockUser(roles = { "ADMIN" })
   @Test
   public void post_cowdeath_admin_post() throws Exception {
-      User u1 = User.builder().id(1L).build();
-      UserCommons origUserCommons = UserCommons
-          .builder()
-          .id(1L)
-          .userId(1L)
-          .commonsId(1L)
-          .totalWealth(300)
-          .numOfCows(0)
-          .build();
+    User u1 = User.builder().id(1L).build();
+    UserCommons origUserCommons = UserCommons
+        .builder()
+        .id(1L)
+        .userId(1L)
+        .commonsId(1L)
+        .totalWealth(300)
+        .numOfCows(0)
+        .build();
 
-      Commons testCommons = Commons
-          .builder()
-          .name("test commons")
-          .cowPrice(10)
-          .milkPrice(2)
-          .startingBalance(300)
-          .startingDate(LocalDateTime.now())
-          .build();
-
-
-      CowDeath cowdeathsample = CowDeath
-          .builder()
-          .avgHealth(11)
-          .commonsId(1)
-          .createdAt(null)
-          .cowsKilled(9)
-          .userId(1)
-          .build();
-
-      when(cowdeathRepository.save(cowdeathsample)).thenReturn(cowdeathsample);
-      when(userCommonsRepository.findById(1L)).thenReturn(Optional.of(origUserCommons));
-      when(commonsRepository.findById(1L)).thenReturn(Optional.of(testCommons));
-      when(userRepository.findById(1L)).thenReturn(Optional.of(u1));
+    Commons testCommons = Commons
+        .builder()
+        .name("test commons")
+        .cowPrice(10)
+        .milkPrice(2)
+        .startingBalance(300)
+        .startingDate(LocalDateTime.now())
+        .build();
 
 
-      MvcResult response = mockMvc.perform(post("/api/cowdeath?commonsId=1&userId=1&cowsKilled=9&avgHealth=11")
-        .with(csrf()))
-              .andExpect(status().isOk()).andReturn();
-      verify(cowdeathRepository, times(1)).save(cowdeathsample);
+    CowDeath cowdeathsample = CowDeath
+        .builder()
+        .avgHealth(11)
+        .commonsId(1)
+        .createdAt(null)
+        .cowsKilled(9)
+        .userId(1)
+        .build();
+
+    when(cowdeathRepository.save(cowdeathsample)).thenReturn(cowdeathsample);
+    when(userCommonsRepository.findById(1L)).thenReturn(Optional.of(origUserCommons));
+    when(commonsRepository.findById(1L)).thenReturn(Optional.of(testCommons));
+    when(userRepository.findById(1L)).thenReturn(Optional.of(u1));
 
 
-      String expectedJson = mapper.writeValueAsString(cowdeathsample);
-      String responseString = response.getResponse().getContentAsString();
-      assertEquals(expectedJson, responseString);
+    MvcResult response = mockMvc.perform(post("/api/cowdeath?commonsId=1&userId=1&cowsKilled=9&avgHealth=11")
+      .with(csrf()))
+            .andExpect(status().isOk()).andReturn();
+    verify(cowdeathRepository, times(1)).save(cowdeathsample);
+
+
+    String expectedJson = mapper.writeValueAsString(cowdeathsample);
+    String responseString = response.getResponse().getContentAsString();
+    assertEquals(expectedJson, responseString);
   }
 
   @WithMockUser(roles = { "ADMIN" })
   @Test
   public void get_all_cowdeaths_using_commons_id() throws Exception {
-
-      List<CowDeath> expectedCowDeaths = new ArrayList<CowDeath>();     
-
-      CowDeath cowdeathsample = CowDeath.builder()
-          .id(0)
-          .avgHealth(11)
-          .commonsId(1)
-          .cowsKilled(9)
-          .userId(5)
-          .build();
-      CowDeath cowdeathsample2 = CowDeath.builder()
-          .id(1)
-          .avgHealth(12)
-          .commonsId(1)
-          .cowsKilled(5)
-          .userId(14)
-          .build();
+    List<CowDeath> expectedCowDeaths = new ArrayList<CowDeath>();     
+    CowDeath cowdeathsample = CowDeath.builder()
+        .id(0)
+        .avgHealth(11)
+        .commonsId(1)
+        .cowsKilled(9)
+        .userId(5)
+        .build();
+    CowDeath cowdeathsample2 = CowDeath.builder()
+        .id(1)
+        .avgHealth(12)
+        .commonsId(1)
+        .cowsKilled(5)
+        .userId(14)
+        .build();
 
 
-      expectedCowDeaths.add(cowdeathsample);
-      expectedCowDeaths.add(cowdeathsample2);
+    expectedCowDeaths.add(cowdeathsample);
+    expectedCowDeaths.add(cowdeathsample2);
 
-      when(cowdeathRepository.getCowsKilledByCommonsId(1L)).thenReturn(expectedCowDeaths);
-      when(cowdeathRepository.save(cowdeathsample)).thenReturn(cowdeathsample);
-      when(cowdeathRepository.save(cowdeathsample2)).thenReturn(cowdeathsample2);
+    when(cowdeathRepository.getCowsKilledByCommonsId(1L)).thenReturn(expectedCowDeaths);
+    when(cowdeathRepository.save(cowdeathsample)).thenReturn(cowdeathsample);
+    when(cowdeathRepository.save(cowdeathsample2)).thenReturn(cowdeathsample2);
 
-      MvcResult response = mockMvc.perform(get("/api/cowdeath/bycommons?commonsId=1").with(csrf()))
-                .andExpect(status().isOk()).andReturn();
+    MvcResult response = mockMvc.perform(get("/api/cowdeath/bycommons?commonsId=1").with(csrf()))
+              .andExpect(status().isOk()).andReturn();
 
-      verify(cowdeathRepository, times(1)).getCowsKilledByCommonsId(1L);
-      
-      String responseString = response.getResponse().getContentAsString();
-      List<CowDeath> actualCowDeaths = objectMapper.readValue(responseString, new TypeReference<List<CowDeath>>() {});
-      assertEquals(expectedCowDeaths, actualCowDeaths);
+    verify(cowdeathRepository, times(1)).getCowsKilledByCommonsId(1L);
+    
+    String responseString = response.getResponse().getContentAsString();
+    List<CowDeath> actualCowDeaths = objectMapper.readValue(responseString, new TypeReference<List<CowDeath>>() {});
+    assertEquals(expectedCowDeaths, actualCowDeaths);
   }
 
   @WithMockUser(roles = { "USER" })
   @Test
   public void get_cowdeaths_using_commons_id_and_user_id() throws Exception {
-      CowDeath cowDeathSample = CowDeath.builder()
+    CowDeath cowDeathSample = CowDeath.builder()
         .id(0)
         .avgHealth(11)
         .commonsId(1)
@@ -230,34 +228,33 @@ public class CowDeathControllerTests extends ControllerTestCase {
         .userId(100)
         .build();
 
-
-      when(cowdeathRepository.getCowsKilledByCommonsIdAndUserId(1L, 100L)).thenReturn(Optional.of(cowDeathSample));
-      MvcResult response = mockMvc.perform(get("/api/cowdeath/byusercommons?commonsId=1&userId=100").with(csrf()))
-                .andExpect(status().isOk()).andReturn();
-      verify(cowdeathRepository, times(1)).getCowsKilledByCommonsIdAndUserId(1L,100L);
-      String responseString = response.getResponse().getContentAsString();
-      CowDeath actualCowDeath = objectMapper.readValue(responseString, new TypeReference<CowDeath>() {});
-      assertEquals(cowDeathSample, actualCowDeath);
+    when(cowdeathRepository.getCowsKilledByCommonsIdAndUserId(1L, 100L)).thenReturn(Optional.of(cowDeathSample));
+    MvcResult response = mockMvc.perform(get("/api/cowdeath/byusercommons?commonsId=1&userId=100").with(csrf()))
+              .andExpect(status().isOk()).andReturn();
+    verify(cowdeathRepository, times(1)).getCowsKilledByCommonsIdAndUserId(1L,100L);
+    String responseString = response.getResponse().getContentAsString();
+    CowDeath actualCowDeath = objectMapper.readValue(responseString, new TypeReference<CowDeath>() {});
+    assertEquals(cowDeathSample, actualCowDeath);
   }
 
 
   @WithMockUser(roles = { "USER" })
   @Test
   public void get_cowdeath__nonexistent_using_commons_id_and_user_id() throws Exception {
-      MvcResult response = mockMvc.perform(get("/api/cowdeath/byusercommons?commonsId=100000&userId=1").contentType("application/json")).andExpect(status().isNotFound()).andReturn();
-      verify(cowdeathRepository, times(1)).getCowsKilledByCommonsIdAndUserId(100000L,1L);
-      Map<String, Object> json = responseToJson(response);
-      assertEquals("EntityNotFoundException", json.get("type"));
-      assertEquals("CowDeath with commonsId 100000 and userId 1 not found", json.get("message"));
+    MvcResult response = mockMvc.perform(get("/api/cowdeath/byusercommons?commonsId=100000&userId=1").contentType("application/json")).andExpect(status().isNotFound()).andReturn();
+    verify(cowdeathRepository, times(1)).getCowsKilledByCommonsIdAndUserId(100000L,1L);
+    Map<String, Object> json = responseToJson(response);
+    assertEquals("EntityNotFoundException", json.get("type"));
+    assertEquals("CowDeath with commonsId 100000 and userId 1 not found", json.get("message"));
   }
 
   @WithMockUser(roles = { "ADMIN" })
   @Test
   public void get_cowdeath_nonexistent_using_commons_id() throws Exception {
-      MvcResult response = mockMvc.perform(get("/api/cowdeath/bycommons?commonsId=20000").contentType("application/json")).andExpect(status().isOk()).andReturn();
-      verify(cowdeathRepository, times(1)).getCowsKilledByCommonsId(20000L);
-      String responseString = response.getResponse().getContentAsString();
-      assertEquals("[]", responseString);
+    MvcResult response = mockMvc.perform(get("/api/cowdeath/bycommons?commonsId=20000").contentType("application/json")).andExpect(status().isOk()).andReturn();
+    verify(cowdeathRepository, times(1)).getCowsKilledByCommonsId(20000L);
+    String responseString = response.getResponse().getContentAsString();
+    assertEquals("[]", responseString);
   }
   
 }
