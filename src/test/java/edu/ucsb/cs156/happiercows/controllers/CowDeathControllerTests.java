@@ -97,7 +97,6 @@ public class CowDeathControllerTests extends ControllerTestCase {
 
     mockMvc.perform(post("/api/cowdeath?commonsId=2&userId=17&cowsKilled=2&avgHealth=4")
         .with(csrf())).andExpect(status().isNotFound());
-
   }
 
   @WithMockUser(roles = { "ADMIN" })
