@@ -75,20 +75,20 @@ public class CowDeathController extends ApiController {
         .orElseThrow(() -> new EntityNotFoundException(User.class, userId));
 
     log.info("commonsId={}, userId={}, cowsKilled={}, avgHealth={}", commonsId, userId, cowsKilled, avgHealth);
-    return cowdeathRepository.save(
-            CowDeath.builder()
-                .commonsId(commonsId)
-                .userId(userId)
-                .cowsKilled(cowsKilled)
-                .avgHealth(avgHealth)
-                .build());
+    return cowdeathRepository.save(CowDeath.builder()
+        .commonsId(commonsId)
+        .userId(userId)
+        .cowsKilled(cowsKilled)
+        .avgHealth(avgHealth)
+        .build());
   }
 
   @ApiOperation(value = "Get the number of cow deaths of a common for admin")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @GetMapping("/api/cowdeath/bycommons")
   public Iterable<CowDeath> getCowDeathByCommonsId_admin(
-      @ApiParam("commonsId") @RequestParam Long commonsId) throws JsonProcessingException {
+      @ApiParam("commonsId") @RequestParam Long commonsId)
+    throws JsonProcessingException {
     Iterable<CowDeath> cowdeath = cowdeathRepository.getCowsKilledByCommonsId(commonsId);
     return cowdeath;
   }
@@ -97,7 +97,9 @@ public class CowDeathController extends ApiController {
   @PreAuthorize("hasRole('ROLE_USER')")
   @GetMapping("/api/cowdeath/byusercommons")
   public CowDeath getCowDeathByCommonsIdAndUserId (
-      @ApiParam("commonsId") @RequestParam Long commonsId, @ApiParam("userId") @RequestParam Long userId) throws JsonProcessingException {
+      @ApiParam("commonsId") @RequestParam Long commonsId, 
+      @ApiParam("userId") @RequestParam Long userId) 
+    throws JsonProcessingException {
     CowDeath cowdeath = cowdeathRepository.getCowsKilledByCommonsIdAndUserId(commonsId, userId)
         .orElseThrow(() -> new EntityNotFoundException(CowDeath.class, "commonsId", commonsId, "userId", userId));
     return cowdeath;

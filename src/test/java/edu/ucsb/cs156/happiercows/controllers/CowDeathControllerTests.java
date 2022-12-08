@@ -96,7 +96,7 @@ public class CowDeathControllerTests extends ControllerTestCase {
     when(userCommonsRepository.findById(1L)).thenReturn(Optional.of(expectedUserCommons));
 
     mockMvc.perform(post("/api/cowdeath?commonsId=2&userId=17&cowsKilled=2&avgHealth=4")
-           .with(csrf())).andExpect(status().isNotFound());
+        .with(csrf())).andExpect(status().isNotFound());
 
   }
 
